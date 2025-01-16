@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analyse de Sentiment</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Couleurs mises à jour */
+      body {
+        font-family: "Poppins", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f4f1e1; /* Fond doux et clair */
+        color: #333;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 50px auto;
+        background: white;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+
+      header {
+        background: linear-gradient(90deg, #4caf50, #00bcd4); /* Dégradé moderne */
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      header img {
+        width: 100px;
+        margin-bottom: 10px;
+      }
+
+      header h1 {
+        font-size: 24px;
+        margin: 0;
+      }
+
+      header p {
+        font-size: 16px;
+        margin: 5px 0 0;
+      }
+
+      textarea {
+        background: #e0f2f1; /* Fond bleu pastel pour les commentaires */
+        width: 100%;
+        padding: 2px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        margin: 20px 0;
+        resize: none;
+        transition: border-color 0.3s;
+      }
+
+      textarea:hover,
+      textarea:focus {
+        border-color: #00bcd4; /* Bleu turquoise pour la bordure sur survol ou focus */
+      }
+
+      button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(90deg, #4caf50, #00bcd4);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: bold;
+      }
+
+      button:hover {
+        background: #4caf50; /* Bouton vert vibrant */
+        color: white;
+        border-radius: 8px;
+      }
+
+      footer {
+        background: #2c3e50;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+      }
+
+      footer a {
+        color: #00f2fe;
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      .upload-icon {
+        display: inline-block;
+        font-size: 18px;
+        color: #fff;
+        background: #4caf50;
+        padding: 10px 20px;
+        margin: 15px 0;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+
+      .upload-icon:hover {
+        background: #43a047;
+        transform: scale(1.05);
+      }
+
+      #fileInput {
+        display: none; /* Masquer le champ d'upload */
+      }
+    </style>
+    <script>
+      function toggleInputs(source) {
+        const commentsInput = document.querySelector("textarea[name='comments']");
+        const fileInput = document.querySelector("input[name='fileInput']");
+
+        if (source === "text") {
+          fileInput.disabled = commentsInput.value.trim() !== "";
+        } else if (source === "file") {
+          commentsInput.disabled = fileInput.files.length > 0;
+        }
+      }
+
+      document.getElementById('fileInput').addEventListener('change', function () {
+        const file = this.files[0];
+        if (file && (file.name.endsWith('.csv') || file.name.endsWith('.xlsx'))) {
+          alert(`Fichier accepté : ${file.name}`);
+        } else {
+          alert('Format non supporté. Veuillez choisir un fichier CSV ou Excel.');
+          this.value = '';
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <img src="/static/logo.png" alt="Logo" />
+      <h1>Analyse de Sentiment</h1>
+      <p>Analysez vos commentaires ou fichiers rapidement !</p>
+    </header>
+
+    <div class="container">
+      <h1>Entrez vos Commentaires</h1>
+      <form action="/analyze" method="post" enctype="multipart/form-data">
+        <textarea
+          name="comments"
+          placeholder="Entrez vos commentaires ici (une ligne par commentaire)"
+          rows="10"
+          required
+          oninput="toggleInputs('text')"
+        ></textarea>
+
+        <label for="fileInput" class="upload-icon">
+          <i class="fas fa-upload"></i> Téléchargez un fichier CSV
+        </label>
+        <input
+          type="file"
+          name="fileInput"
+          id="fileInput"
+          accept=".csv, .xlsx"
+          onchange="toggleInputs('file')"
+        />
+
+        <button type="submit"><i class="fas fa-chart-pie"></i> Analyser</button>
+      </form>
+    </div>
+
+    <footer>
+      <p>
+        &copy; 2024 SentimentWeb | <a href="#">Contactez-nous</a> | Powered by DSEF
+      </p>
+    </footer>
+  </body>
+</html>
